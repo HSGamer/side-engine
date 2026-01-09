@@ -1,0 +1,35 @@
+{
+  "name": "side-engine",
+  "version": "1.0.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rslib build",
+    "check": "biome check --write",
+    "dev": "rslib build --watch",
+    "format": "biome format --write",
+    "test": "rstest"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.3.8",
+    "@rslib/core": "^0.19.1",
+    "@rstest/adapter-rslib": "^0.1.1",
+    "@rstest/core": "^0.7.7",
+    "@types/node": "^24.10.4",
+    "typescript": "^5.9.3"
+  },
+  "private": true,
+  "dependencies": {
+    "@seleniumhq/side-model": "^4.0.13",
+    "@seleniumhq/side-runtime": "^4.0.13"
+  }
+}

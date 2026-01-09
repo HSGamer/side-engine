@@ -1,0 +1,132 @@
+{
+  "id": "3c8218f5-a91c-419b-a9a8-937430bf8ec1",
+  "version": "3.0",
+  "name": "TestGoogle",
+  "url": "http://www.google.com",
+  "urls": [
+    "http://www.google.com"
+  ],
+  "plugins": [],
+  "suites": [
+    {
+      "id": "598e25c2-e495-4ed3-b768-07c02e20c3b4",
+      "name": "New Suite",
+      "parallel": false,
+      "persistSession": false,
+      "tests": [
+        "320597bb-1135-4d22-9708-8460aacba17c"
+      ],
+      "timeout": 30000
+    }
+  ],
+  "tests": [
+    {
+      "id": "320597bb-1135-4d22-9708-8460aacba17c",
+      "name": "New Test",
+      "commands": [
+        {
+          "id": "26942c3d-5bfc-4c0d-a45b-de9d2817f82b",
+          "command": "open",
+          "target": "https://google.com",
+          "value": ""
+        },
+        {
+          "command": "click",
+          "target": "id=APjFqb",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "09ccd72f-c7a4-4010-8210-69b010f231e7",
+          "targets": [
+            [
+              "id=APjFqb",
+              "id"
+            ],
+            [
+              "name=q",
+              "name"
+            ],
+            [
+              "css=[data-ved=\"0ahUKEwi-uu60lP6RAxXPhq8BHS3bGQ0Q39UDCAk\"]",
+              "css:data-attr"
+            ],
+            [
+              "css=#APjFqb",
+              "css:finder"
+            ],
+            [
+              "xpath=(//textarea[@id='APjFqb'])[1]",
+              "xpath:attributes"
+            ]
+          ]
+        },
+        {
+          "command": "type",
+          "target": "id=APjFqb",
+          "value": "Test",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "d3210e1a-4757-483c-b9eb-a18568d9704c",
+          "targets": [
+            [
+              "id=APjFqb",
+              "id"
+            ],
+            [
+              "name=q",
+              "name"
+            ],
+            [
+              "css=[data-ved=\"0ahUKEwi-uu60lP6RAxXPhq8BHS3bGQ0Q39UDCAk\"]",
+              "css:data-attr"
+            ],
+            [
+              "css=#APjFqb",
+              "css:finder"
+            ],
+            [
+              "xpath=(//textarea[@id='APjFqb'])[1]",
+              "xpath:attributes"
+            ]
+          ]
+        },
+        {
+          "command": "click",
+          "target": "name=btnK",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "557ccabc-5eca-43f8-9d35-2d7a0e47a1e1",
+          "targets": [
+            [
+              "name=btnK",
+              "name"
+            ],
+            [
+              "css=[data-ved=\"0ahUKEwi-uu60lP6RAxXPhq8BHS3bGQ0Q4dUDCBQ\"]",
+              "css:data-attr"
+            ],
+            [
+              "css=center:nth-child(2) > .gNO89b",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@name='btnK'])[1]",
+              "xpath:attributes"
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "snapshot": {
+    "dependencies": {},
+    "tests": [],
+    "jest": {
+      "extraGlobals": []
+    }
+  }
+}
