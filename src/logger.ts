@@ -22,8 +22,8 @@ export class TestLogger {
     logs: string[];
     playbackState: PlaybackTimestamp[];
     commandStates: Record<string, CommandTimestamp[]>;
-    playbackStateListener: PlaybackStateListener[];
-    commandStateListener: CommandStateListener[];
+    private readonly playbackStateListener: PlaybackStateListener[];
+    private readonly commandStateListener: CommandStateListener[];
 
     constructor() {
         this.logs = [];
