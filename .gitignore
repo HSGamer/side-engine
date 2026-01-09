@@ -12,3 +12,6 @@ storybook-static
 .vscode/*
 !.vscode/extensions.json
 .idea
+
+# Test Output
+tests/test-runner-output.json
