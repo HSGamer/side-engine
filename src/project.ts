@@ -12,6 +12,8 @@ import {PluginRuntimeShape} from "@seleniumhq/side-runtime/dist/types";
 import {TestRunner} from "./runner.ts";
 import {PlaybackConstructorArgs} from "@seleniumhq/side-runtime/dist/playback";
 import {WebDriverExecutorConstructorArgs} from "@seleniumhq/side-runtime/dist/webdriver";
+import {TestLogger} from "./logger.ts";
+import {TestReport} from "./types.ts";
 
 export class TestProject {
     project: ProjectShape;
@@ -71,6 +73,14 @@ export class TestProject {
                 await promise();
             }
         })
+    }
+
+    createReport(id: string, logger: TestLogger): TestReport | undefined {
+        const test = this.getTest(id);
+        if (!test) {
+            return undefined;
+        }
+        return logger.createReport(test);
     }
 }
 

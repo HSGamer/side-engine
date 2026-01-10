@@ -1,18 +1,8 @@
-import {CommandState, PlaybackState} from "@seleniumhq/side-runtime";
 import {PassThrough} from "node:stream";
 import {TestRunner} from "./runner.ts";
-
-export type PlaybackTimestamp = {
-    state: PlaybackState;
-    timestamp: Date;
-}
-
-export type CommandTimestamp = {
-    state: CommandState;
-    timestamp: Date;
-    message?: string;
-    error?: Error;
-}
+import {CommandTimestamp, PlaybackTimestamp, TestReport} from "./types.ts";
+import {TestShape} from "@seleniumhq/side-model";
+import {CommandStates, PlaybackStates} from "@seleniumhq/side-runtime";
 
 export type PlaybackStateListener = (playback: PlaybackTimestamp) => void;
 
@@ -89,5 +79,21 @@ export class TestLogger {
                 this.commandStateListener.forEach(listener => listener(event.id, timestamp))
             }
         })
+    }
+
+    createReport(test: TestShape): TestReport {
+        return {
+            id: test.id,
+            name: test.id,
+            timestamp: this.playbackState,
+            commands: test.commands.map(c => ({
+                id: c.id,
+                command: c,
+                timestamp: this.commandStates[c.id] || [],
+                state: this.commandStates[c.id]?.at(-1)?.state || CommandStates.UNDETERMINED
+            })),
+            logs: this.logs,
+            state: this.playbackState.at(-1)?.state || PlaybackStates.ERRORED
+        }
     }
 }

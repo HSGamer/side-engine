@@ -125,6 +125,60 @@ test(
 		const states = testLogger.playbackState.map((ps) => ps.state);
 		expect(states.includes(PlaybackStates.PLAYING)).toBe(true);
 		expect(states.includes(PlaybackStates.FINISHED)).toBe(true);
-	},
-	120000
-)
+		},
+		120000
+		);
+
+		test(
+		'createReport generates a valid test report from logger data',
+		async () => {
+			const project = loadProjectFromFile('test.side');
+			const testProject = createProject(project);
+			const testLogger = new TestLogger();
+
+			// Create WebDriver instance for Chromium
+			const driver = await new Builder()
+				.forBrowser(Browser.CHROME)
+				.build();
+
+			const testId = '320597bb-1135-4d22-9708-8460aacba17c';
+			const runner = testProject.createRunner(testId, {
+				logger: testLogger.createConsole(),
+				executor: testProject.getWebDriverExecutor({
+					driver,
+				}),
+			});
+
+			expect(runner).toBeDefined();
+			testLogger.bind(runner!);
+			await runner!.run();
+
+			// Generate report
+			const report = testProject.createReport(testId, testLogger);
+
+			// Save report to file
+			if (report) {
+				const reportPath = resolve(__dirname, 'test-report-output.json');
+				writeFileSync(reportPath, JSON.stringify(report, null, 2));
+			}
+
+			expect(report).toBeDefined();
+			expect(report?.id).toBe(testId);
+			expect(report?.name).toBe(testId);
+			expect(report?.state).toBeDefined();
+			expect(report?.timestamp).toBeInstanceOf(Array);
+			expect(report?.timestamp.length).toBeGreaterThan(0);
+			expect(report?.commands).toBeInstanceOf(Array);
+			expect(report?.commands.length).toBeGreaterThan(0);
+			expect(report?.logs).toBeInstanceOf(Array);
+
+			// Verify command structure
+			report?.commands.forEach((cmd) => {
+				expect(cmd.id).toBeDefined();
+				expect(cmd.command).toBeDefined();
+				expect(cmd.state).toBeDefined();
+				expect(cmd.timestamp).toBeInstanceOf(Array);
+			});
+		},
+		120000
+		)

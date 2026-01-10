@@ -15,3 +15,4 @@ storybook-static
 
 # Test Output
 tests/test-runner-output.json
+tests/test-report-output.json
