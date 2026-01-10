@@ -55,20 +55,18 @@ test('create and run a test runner from the project', async () => {
   expect(runner).toBeDefined();
   expect(runner?.playbackRunner?.playback).toBeDefined();
 
-  if (runner) {
-    let commandCount = 0;
-    runner.hookOnCommandEvent(() => {
-      commandCount++;
-    });
+  let commandCount = 0;
+  runner!.hookOnCommandEvent(() => {
+    commandCount++;
+  });
 
-    // Runner is created successfully
-    expect(runner?.playbackRunner?.runner).toBeDefined();
+  // Runner is created successfully
+  expect(runner?.playbackRunner?.runner).toBeDefined();
 
-    // Run the test
-    await runner.run();
+  // Run the test
+  await runner!.run();
 
-    expect(commandCount).toBeGreaterThan(0);
-  }
+  expect(commandCount).toBeGreaterThan(0);
 }, 120000);
 
 test('create and run a test runner from the project with logger', async () => {
