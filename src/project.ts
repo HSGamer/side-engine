@@ -73,12 +73,7 @@ export class TestProject {
     }
 
     const playback = this.getPlayback(playbackOptions);
-    return new TestRunner(playback, async (p) => {
-      let promise = await p.play(test);
-      if (promise) {
-        await promise();
-      }
-    });
+    return new TestRunner(playback, test);
   }
 
   createReport(id: string, logger: TestLogger): TestReport | undefined {

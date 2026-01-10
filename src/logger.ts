@@ -1,5 +1,5 @@
 import { PassThrough } from 'node:stream';
-import { TestRunner } from './runner.ts';
+import {BaseRunner, PlaybackRunner} from './runner.ts';
 import { CommandTimestamp, PlaybackTimestamp, TestReport } from './types.ts';
 import { TestShape } from '@seleniumhq/side-model';
 import { CommandStates, PlaybackStates } from '@seleniumhq/side-runtime';
@@ -59,7 +59,7 @@ export class TestLogger {
     return new console.Console(stream);
   }
 
-  bind(runner: TestRunner) {
+  bind(runner: BaseRunner) {
     runner.hookOnPlaybackEvent((event) => {
       const timestamp = {
         state: event.state,

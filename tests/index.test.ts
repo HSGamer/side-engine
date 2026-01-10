@@ -53,7 +53,7 @@ test('create and run a test runner from the project', async () => {
   });
 
   expect(runner).toBeDefined();
-  expect(runner?.playback).toBeDefined();
+  expect(runner?.playbackRunner?.playback).toBeDefined();
 
   if (runner) {
     let commandCount = 0;
@@ -62,7 +62,7 @@ test('create and run a test runner from the project', async () => {
     });
 
     // Runner is created successfully
-    expect(runner.playback).toBeDefined();
+    expect(runner?.playbackRunner?.runner).toBeDefined();
 
     // Run the test
     await runner.run();
@@ -88,7 +88,7 @@ test('create and run a test runner from the project with logger', async () => {
   });
 
   expect(runner).toBeDefined();
-  expect(runner?.playback).toBeDefined();
+  expect(runner?.playbackRunner.playback).toBeDefined();
 
   testLogger.bind(runner!);
 
