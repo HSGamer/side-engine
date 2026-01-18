@@ -1,129 +1,141 @@
-import {
-  Playback,
-  PlaybackEvents,
-  PlaybackEventShapes,
-} from '@seleniumhq/side-runtime';
-import { TestShape } from '@seleniumhq/side-model';
-import { TestLogger } from './logger.ts';
+import {Playback, PlaybackEvents, PlaybackEventShapes, Variables, WebDriverExecutor,} from '@seleniumhq/side-runtime';
+import {TestShape} from '@seleniumhq/side-model';
+import {TestLogger} from './logger.ts';
+import type {PlaybackConstructorArgs} from '@seleniumhq/side-runtime/dist/playback';
 
 export abstract class BaseRunner {
-  abstract hookOnPlaybackEvent(
-    eventListener: (
-      event: PlaybackEventShapes['PLAYBACK_STATE_CHANGED'],
-    ) => void,
-  ): void;
+    abstract hookOnPlaybackEvent(
+        eventListener: (
+            event: PlaybackEventShapes['PLAYBACK_STATE_CHANGED'],
+        ) => void,
+    ): void;
 
-  abstract hookOnCommandEvent(
-    eventListener: (
-      event: PlaybackEventShapes['COMMAND_STATE_CHANGED'],
-    ) => void,
-  ): void;
+    abstract hookOnCommandEvent(
+        eventListener: (
+            event: PlaybackEventShapes['COMMAND_STATE_CHANGED'],
+        ) => void,
+    ): void;
 
-  abstract run(): Promise<void>;
+    abstract run(): Promise<void>;
 
-  abstract stop(): Promise<void>;
+    abstract stop(): Promise<void>;
 
-  abstract abort(): Promise<void>;
+    abstract abort(): Promise<void>;
 }
 
 export class PlaybackRunner extends BaseRunner {
-  playback: Playback;
-  runner: (playback: Playback) => Promise<any>;
+    playback: Playback;
+    runner: (playback: Playback) => Promise<any>;
 
-  constructor(
-    playback: Playback,
-    runner: (playback: Playback) => Promise<any>,
-  ) {
-    super();
-    this.playback = playback;
-    this.runner = runner;
-  }
-
-  hookOnPlaybackEvent(
-    eventListener: (
-      event: PlaybackEventShapes['PLAYBACK_STATE_CHANGED'],
-    ) => void,
-  ) {
-    this.playback['event-emitter'].on(
-      PlaybackEvents.PLAYBACK_STATE_CHANGED,
-      (event: PlaybackEventShapes['PLAYBACK_STATE_CHANGED']) =>
-        eventListener(event),
-    );
-  }
-
-  hookOnCommandEvent(
-    eventListener: (
-      event: PlaybackEventShapes['COMMAND_STATE_CHANGED'],
-    ) => void,
-  ) {
-    this.playback['event-emitter'].on(
-      PlaybackEvents.COMMAND_STATE_CHANGED,
-      (event: PlaybackEventShapes['COMMAND_STATE_CHANGED']) =>
-        eventListener(event),
-    );
-  }
-
-  async run() {
-    try {
-      await this.runner(this.playback);
-    } finally {
-      await this.playback.cleanup();
+    constructor(
+        playback: Playback,
+        runner: (playback: Playback) => Promise<any>,
+    ) {
+        super();
+        this.playback = playback;
+        this.runner = runner;
     }
-  }
 
-  async stop() {
-    await this.playback.stop();
-  }
+    hookOnPlaybackEvent(
+        eventListener: (
+            event: PlaybackEventShapes['PLAYBACK_STATE_CHANGED'],
+        ) => void,
+    ) {
+        this.playback['event-emitter'].on(
+            PlaybackEvents.PLAYBACK_STATE_CHANGED,
+            (event: PlaybackEventShapes['PLAYBACK_STATE_CHANGED']) =>
+                eventListener(event),
+        );
+    }
 
-  async abort() {
-    await this.playback.stop();
-  }
+    hookOnCommandEvent(
+        eventListener: (
+            event: PlaybackEventShapes['COMMAND_STATE_CHANGED'],
+        ) => void,
+    ) {
+        this.playback['event-emitter'].on(
+            PlaybackEvents.COMMAND_STATE_CHANGED,
+            (event: PlaybackEventShapes['COMMAND_STATE_CHANGED']) =>
+                eventListener(event),
+        );
+    }
+
+    async run() {
+        try {
+            await this.runner(this.playback);
+        } finally {
+            await this.playback.cleanup();
+        }
+    }
+
+    async stop() {
+        await this.playback.stop();
+    }
+
+    async abort() {
+        await this.playback.stop();
+    }
 }
 
 export class TestRunner extends BaseRunner {
-  test: TestShape;
-  playbackRunner: PlaybackRunner;
+    test: TestShape;
+    playbackRunner: PlaybackRunner;
 
-  constructor(playback: Playback, test: TestShape) {
-    super();
-    this.test = test;
-    this.playbackRunner = new PlaybackRunner(playback, async (p) => {
-      let promise = await p.play(test);
-      if (promise) {
-        await promise();
-      }
-    });
-  }
+    constructor(playback: Playback, test: TestShape) {
+        super();
+        this.test = test;
+        this.playbackRunner = new PlaybackRunner(playback, async (p) => {
+            let promise = await p.play(test);
+            if (promise) {
+                await promise();
+            }
+        });
+    }
 
-  abort(): Promise<void> {
-    return this.playbackRunner.abort();
-  }
+    static createRunner(
+        test: TestShape,
+        options?: Partial<PlaybackConstructorArgs>,
+    ) {
+        const playback = new Playback({
+            baseUrl: options?.baseUrl || 'about:blank',
+            executor: options?.executor || new WebDriverExecutor({}),
+            getTestByName: (name) => (test.name === name ? test : null) as TestShape,
+            logger: options?.logger || console,
+            variables: options?.variables || new Variables(),
+            ...(options || {}),
+        });
+        return new TestRunner(playback, test);
+    }
 
-  hookOnCommandEvent(
-    eventListener: (
-      event: PlaybackEventShapes['COMMAND_STATE_CHANGED'],
-    ) => void,
-  ): void {
-    this.playbackRunner.hookOnCommandEvent(eventListener);
-  }
+    abort(): Promise<void> {
+        return this.playbackRunner.abort();
+    }
 
-  hookOnPlaybackEvent(
-    eventListener: (
-      event: PlaybackEventShapes['PLAYBACK_STATE_CHANGED'],
-    ) => void,
-  ): void {
-    this.playbackRunner.hookOnPlaybackEvent(eventListener);
-  }
+    hookOnCommandEvent(
+        eventListener: (
+            event: PlaybackEventShapes['COMMAND_STATE_CHANGED'],
+        ) => void,
+    ): void {
+        this.playbackRunner.hookOnCommandEvent(eventListener);
+    }
 
-  run(): Promise<void> {
-    return this.playbackRunner.run();
-  }
+    hookOnPlaybackEvent(
+        eventListener: (
+            event: PlaybackEventShapes['PLAYBACK_STATE_CHANGED'],
+        ) => void,
+    ): void {
+        this.playbackRunner.hookOnPlaybackEvent(eventListener);
+    }
 
-  stop(): Promise<void> {
-    return this.playbackRunner.stop();
-  }
+    run(): Promise<void> {
+        return this.playbackRunner.run();
+    }
 
-  createReport(logger: TestLogger) {
-    return logger.createReport(this.test);
-  }
+    stop(): Promise<void> {
+        return this.playbackRunner.stop();
+    }
+
+    createReport(logger: TestLogger) {
+        return logger.createReport(this.test);
+    }
 }

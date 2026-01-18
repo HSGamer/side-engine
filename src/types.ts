@@ -1,30 +1,30 @@
-import { CommandState, PlaybackState } from '@seleniumhq/side-runtime';
-import { CommandShape } from '@seleniumhq/side-model';
+import type {CommandState, PlaybackState} from '@seleniumhq/side-runtime';
+import type {CommandShape} from '@seleniumhq/side-model';
 
 export type PlaybackTimestamp = {
-  state: PlaybackState;
-  timestamp: Date;
+    state: PlaybackState;
+    timestamp: Date;
 };
 
 export type CommandTimestamp = {
-  state: CommandState;
-  timestamp: Date;
-  message?: string;
-  error?: Error;
+    state: CommandState;
+    timestamp: Date;
+    message?: string;
+    error?: Error;
 };
 
 export type TestCommandReport = {
-  id: string;
-  command: CommandShape;
-  state: CommandState;
-  timestamp: CommandTimestamp[];
+    id: string;
+    command: CommandShape;
+    state: CommandState;
+    timestamp: CommandTimestamp[];
 };
 
 export type TestReport = {
-  id: string;
-  name: string;
-  state: PlaybackState;
-  timestamp: PlaybackTimestamp[];
-  commands: TestCommandReport[];
-  logs: string[];
+    id: string;
+    name: string;
+    state: PlaybackState;
+    timestamp: PlaybackTimestamp[];
+    commands: TestCommandReport[];
+    logs: string[];
 };

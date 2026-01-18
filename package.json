@@ -1,33 +1,42 @@
 {
   "name": "side-engine",
-  "version": "1.0.0",
   "type": "module",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
-    }
+  "version": "0.0.0",
+  "description": "A NodeJS library to execute Selenium IDE projects",
+  "author": "Huynh Tien <huynhqtienvtag@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/HSGamer/side-engine#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HSGamer/side-engine.git"
   },
-  "types": "./dist/index.d.ts",
+  "bugs": {
+    "url": "https://github.com/HSGamer/side-engine/issues"
+  },
+  "exports": {
+    ".": "./dist/index.mjs",
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "rslib build",
-    "check": "biome check --write",
-    "dev": "rslib build --watch",
-    "format": "biome format --write",
-    "test": "rstest"
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "test": "vitest",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "pnpm run build"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.3.8",
-    "@rslib/core": "^0.19.1",
-    "@rstest/adapter-rslib": "^0.1.1",
-    "@rstest/core": "^0.7.7",
-    "@types/node": "^24.10.4",
-    "typescript": "^5.9.3"
+    "@types/node": "^25.0.3",
+    "bumpp": "^10.3.2",
+    "tsdown": "^0.18.1",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.16"
   },
-  "private": true,
   "dependencies": {
     "@seleniumhq/side-model": "^4.0.13",
     "@seleniumhq/side-runtime": "^4.0.13"

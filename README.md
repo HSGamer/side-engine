@@ -1,23 +1,23 @@
-# Rslib project
+# tsdown-starter
 
-## Setup
+A starter for creating a TypeScript package.
 
-Install the dependencies:
+## Development
+
+- Install dependencies:
 
 ```bash
 npm install
 ```
 
-## Get started
+- Run the unit tests:
 
-Build the library:
+```bash
+npm run test
+```
+
+- Build the library:
 
 ```bash
 npm run build
-```
-
-Build the library in watch mode:
-
-```bash
-npm run dev
 ```

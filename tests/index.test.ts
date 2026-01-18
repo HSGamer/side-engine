@@ -1,8 +1,8 @@
-import { expect, test } from '@rstest/core';
+import { expect, test } from 'vitest';
 import { readFileSync, writeFileSync } from 'fs';
 import { resolve } from 'path';
-import { ProjectShape } from '@seleniumhq/side-model';
-import { createProject, TestLogger } from '../src';
+import type {ProjectShape} from '@seleniumhq/side-model';
+import { TestLogger, TestProject, TestRunner } from '../src';
 import { Browser, Builder } from 'selenium-webdriver';
 import { PlaybackStates } from '@seleniumhq/side-runtime';
 
@@ -28,7 +28,7 @@ test('parse test.side file as JSON and map to ProjectShape', () => {
 
 test('createProject works with parsed test.side data', () => {
   const project = loadProjectFromFile('test.side');
-  const testProject = createProject(project);
+  const testProject = TestProject.createProject(project);
 
   expect(testProject.project).toEqual(project);
   expect(testProject.getTests()).toHaveLength(1);
@@ -40,7 +40,7 @@ test('createProject works with parsed test.side data', () => {
 
 test('create and run a test runner from the project', async () => {
   const project = loadProjectFromFile('test.side');
-  const testProject = createProject(project);
+  const testProject = TestProject.createProject(project);
 
   // Create WebDriver instance for Chromium
   const driver = await new Builder().forBrowser(Browser.CHROME).build();
@@ -71,7 +71,7 @@ test('create and run a test runner from the project', async () => {
 
 test('create and run a test runner from the project with logger', async () => {
   const project = loadProjectFromFile('test.side');
-  const testProject = createProject(project);
+  const testProject = TestProject.createProject(project);
   const testLogger = new TestLogger();
 
   // Create WebDriver instance for Chromium
@@ -117,7 +117,7 @@ test('create and run a test runner from the project with logger', async () => {
 
 test('createReport generates a valid test report from logger data', async () => {
   const project = loadProjectFromFile('test.side');
-  const testProject = createProject(project);
+  const testProject = TestProject.createProject(project);
   const testLogger = new TestLogger();
 
   const driver = await new Builder().forBrowser(Browser.CHROME).build();
@@ -140,18 +140,51 @@ test('createReport generates a valid test report from logger data', async () => 
   expect(report?.commands.length).toBeGreaterThan(0);
   expect(report?.logs).toBeInstanceOf(Array);
   report?.commands.forEach((cmd) => {
-    expect(cmd).toEqual(expect.objectContaining({
-      id: expect.anything(),
-      command: expect.anything(),
-      state: expect.anything(),
-      timestamp: expect.any(Array),
-    }));
+    expect(cmd).toEqual(
+        expect.objectContaining({
+          id: expect.anything(),
+          command: expect.anything(),
+          state: expect.anything(),
+          timestamp: expect.any(Array),
+        }),
+    );
   });
 
   if (report) {
     writeFileSync(
-      resolve(__dirname, 'test-report-output.json'),
-      JSON.stringify(report, null, 2)
+        resolve(__dirname, 'test-report-output.json'),
+        JSON.stringify(report, null, 2),
     );
   }
+}, 120000);
+
+test('createRunner function creates and runs a test runner', async () => {
+  const project = loadProjectFromFile('test.side');
+  const testProject = TestProject.createProject(project);
+
+  // Create WebDriver instance for Chromium
+  const driver = await new Builder().forBrowser(Browser.CHROME).build();
+
+  const testId = '320597bb-1135-4d22-9708-8460aacba17c';
+  const test = testProject.getTests().find((t) => t.id === testId);
+  expect(test).toBeDefined();
+
+  const runner = TestRunner.createRunner(test!, {
+    executor: testProject.getWebDriverExecutor({
+      driver,
+    }),
+  });
+
+  expect(runner).toBeDefined();
+  expect(runner.playbackRunner.playback).toBeDefined();
+
+  let commandCount = 0;
+  runner.hookOnCommandEvent(() => {
+    commandCount++;
+  });
+
+  // Run the test
+  await runner.run();
+
+  expect(commandCount).toBeGreaterThan(0);
 }, 120000);
