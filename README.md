@@ -1,23 +1,7 @@
-# tsdown-starter
+# side-engine - Selenium IDE Engine
 
-A starter for creating a TypeScript package.
+A NodeJS library to execute Selenium IDE project (.side files)
 
-## Development
+Usage can be found in the [tests](https://github.com/HSGamer/side-engine/blob/master/tests/index.test.ts)
 
-- Install dependencies:
-
-```bash
-npm install
-```
-
-- Run the unit tests:
-
-```bash
-npm run test
-```
-
-- Build the library:
-
-```bash
-npm run build
-```
+A proper README will be up when the library is stable
