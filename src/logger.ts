@@ -1,4 +1,5 @@
 import {PassThrough} from 'node:stream';
+import {Console} from 'node:console';
 import type {BaseRunner} from './runner.ts';
 import type {CommandTimestamp, PlaybackTimestamp, TestReport} from './types.ts';
 import type {TestShape} from '@seleniumhq/side-model';
@@ -56,7 +57,7 @@ export class TestLogger {
             }
         });
 
-        return new console.Console(stream);
+        return new Console({stdout: stream});
     }
 
     bind(runner: BaseRunner) {

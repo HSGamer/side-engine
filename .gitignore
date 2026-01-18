@@ -14,5 +14,5 @@ storybook-static
 .idea
 
 # Test Output
-temp/tests/test-runner-output.json
-temp/tests/test-report-output.json
+tests/test-runner-output.json
+tests/test-report-output.json

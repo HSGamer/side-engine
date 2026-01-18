@@ -1,6 +1,12 @@
-import {Playback, PlaybackEvents, PlaybackEventShapes, Variables, WebDriverExecutor,} from '@seleniumhq/side-runtime';
-import {TestShape} from '@seleniumhq/side-model';
-import {TestLogger} from './logger.ts';
+import {
+    Playback,
+    PlaybackEvents,
+    type PlaybackEventShapes,
+    Variables,
+    WebDriverExecutor,
+} from '@seleniumhq/side-runtime';
+import type {TestShape} from '@seleniumhq/side-model';
+import {TestLogger} from './logger';
 import type {PlaybackConstructorArgs} from '@seleniumhq/side-runtime/dist/playback';
 
 export abstract class BaseRunner {
