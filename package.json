@@ -1,7 +1,7 @@
 {
   "name": "@hsgamer/side-engine",
   "type": "module",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "A NodeJS library to execute Selenium IDE projects",
   "author": "Huynh Tien <huynhqtienvtag@gmail.com>",
   "license": "MIT",
