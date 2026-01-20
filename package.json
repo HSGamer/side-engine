@@ -1,7 +1,7 @@
 {
   "name": "@hsgamer/side-engine",
   "type": "module",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "A NodeJS library to execute Selenium IDE projects",
   "author": "Huynh Tien <huynhqtienvtag@gmail.com>",
   "license": "MIT",
@@ -14,12 +14,15 @@
     "url": "https://github.com/HSGamer/side-engine/issues"
   },
   "exports": {
-    ".": "./dist/index.mjs",
+    ".": {
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.mjs"
+    },
     "./package.json": "./package.json"
   },
-  "main": "./dist/index.mjs",
+  "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
-  "types": "./dist/index.d.mts",
+  "types": "./dist/index.d.cts",
   "files": [
     "dist"
   ],
