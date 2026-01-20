@@ -90,7 +90,7 @@ export class TestLogger {
     createReport(test: TestShape): TestReport {
         return {
             id: test.id,
-            name: test.id,
+            name: test.name,
             timestamp: this.playbackState,
             commands: test.commands.map((c) => ({
                 id: c.id,
