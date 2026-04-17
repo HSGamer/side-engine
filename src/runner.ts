@@ -26,6 +26,8 @@ export abstract class BaseRunner {
 
     abstract stop(): Promise<void>;
 
+    abstract cleanup(): Promise<void>;
+
     abstract abort(): Promise<void>;
 }
 
@@ -67,11 +69,11 @@ export class PlaybackRunner extends BaseRunner {
     }
 
     async run() {
-        try {
-            await this.runner(this.playback);
-        } finally {
-            await this.playback.cleanup();
-        }
+        await this.runner(this.playback);
+    }
+
+    async cleanup() {
+        await this.playback.cleanup();
     }
 
     async stop() {
@@ -135,6 +137,10 @@ export class TestRunner extends BaseRunner {
 
     run(): Promise<void> {
         return this.playbackRunner.run();
+    }
+
+    cleanup(): Promise<void> {
+        return this.playbackRunner.cleanup();
     }
 
     stop(): Promise<void> {
